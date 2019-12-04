@@ -1,0 +1,42 @@
+doctype html5
+
+var name = 'Matt'
+
+def main ->
+  function addItem () {
+    const i = document.querySelector('.item').value;
+
+    // update local variable
+    items.push(i);
+
+    // send item to server
+    fetch('/item', {
+      method: 'POST',
+      headers: {
+	      'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ item: i })
+    });
+
+    // update the UI
+    $sync();
+  }
+<-
+
+html [
+  head []
+  body #main [
+    div [
+      h1 "Welcome {{ name }}"
+    ]
+    input.item;
+    // you can implicitly call $sync when this handler is finished by writing
+    // @addItem instead of addItem
+    button on:click={addItem} "add item"
+    ul [
+      each (i in items) [
+	      li "{{i}}"
+      ]
+    ]
+  ]
+]
