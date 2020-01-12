@@ -1,41 +1,38 @@
-doctype html5
-
 var name = 'Matt'
+var item = ''
 
-def main ->
-  function addItem () {
-    const i = document.querySelector('.item').value;
+--
+function addItem () {
+  fetch('/item', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ item: item })
+  });
 
-    // update local variable
-    items.push(i);
+  items.push(item);
+  item = '';
+}
 
-    // send item to server
-    fetch('/item', {
-      method: 'POST',
-      headers: {
-	      'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ item: i })
-    });
+function deleteItem (e) {
+  var i = parseInt(e.target.dataset.idx)
+  fetch('/item/' + i, { method: 'DELETE' });
+  items.splice(i, 1);
+}
+--
 
-    // update the UI
-    $sync();
-  }
-<-
+doctype html5
 
 html [
   head []
-  body #main [
+  body root [
     div [
       h1 "Welcome {{ name }}"
     ]
-    input.item;
-    // you can implicitly call $sync when this handler is finished by writing
-    // @addItem instead of addItem
+    input value={item} on:input='item = $e.target.value';
     button on:click={addItem} "add item"
     ul [
-      each (i in items) [
-	      li "{{i}}"
+      each (item, i in items) [
+	      li data-idx={i} on:click={deleteItem} '{{ item }}'
       ]
     ]
   ]
