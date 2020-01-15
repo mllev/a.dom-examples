@@ -1,4 +1,4 @@
-var name = 'Matt'
+var name = 'Mark'
 var item = ''
 
 --
@@ -28,11 +28,14 @@ html [
     div [
       h1 "Welcome {{ name }}"
     ]
-    input value={item} on:input='item = $e.target.value';
-    button on:click={addItem} "add item"
-    ul [
-      each (item, i in items) [
-	      li data-idx={i} on:click={deleteItem} '{{ item }}'
+    input placeholder='Name' on:input='name = $e.target.value; $sync()';
+    div [
+      input value={item} on:input='item = $e.target.value';
+      button on:click={addItem} "add item"
+      ul [
+        each (item, i in items) [
+          li data-idx={i} on:click={deleteItem} '{{ item }}'
+        ]
       ]
     ]
   ]

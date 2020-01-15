@@ -1,16 +1,12 @@
 const express = require('express');
 const http = require('http');
-const Adom = require('../../a.dom/index.js');
+const Adom = require('adom-js');
 const bodyParser = require('body-parser');
 
 const app = express();
 const adom = new Adom({ rootDir: '.', cache: false });
 
-let todos = [
-  'filters',
-  'tree diffing',
-  'async rendering'
-];
+let todos = [];
 
 app.use(bodyParser.json());
 
