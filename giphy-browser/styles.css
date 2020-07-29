@@ -11,7 +11,6 @@
   }
 
   .gif {
-    width: 200px;
     margin: 10px;
     box-shadow: 0px 4px 9px 0px rgba(79,79,79,1);
   }
@@ -45,14 +44,17 @@
     margin: 10px auto;
   }
 
-  .gif-column {
-    display: flex;
-    flex-direction: column;
-  }
-
   .gif-container {
     display: flex;
-    justify-content: center;
+    flex-flow: row wrap;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .gif-container img {
+    flex: auto;
+    height: 150px;
+    min-width: 150px;
   }
 
   .message {
