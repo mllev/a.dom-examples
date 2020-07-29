@@ -1,0 +1,13 @@
+{
+  "name": "beat-machine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "adom --dev -r /=index.adom",
+    "local": "node ../../a.dom/index.js --dev -r /=index.adom"
+  },
+  "author": "",
+  "license": "ISC"
+}

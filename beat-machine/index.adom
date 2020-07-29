@@ -1,0 +1,30 @@
+let styles = file 'styles.css'
+
+let rows = [[repeat 0 8]]
+let column = 0
+
+--
+setInterval(() => {
+  column = (column+1)%8;
+  $sync();
+}, 500)
+--
+
+html [
+  head [
+    style "{{styles}}"
+  ]
+  body root [
+    div.container [
+      h3.title "Beat Machine"
+      div.board [
+        div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
+        each (row in rows) [
+          each (pad in row) [
+            div.pad []
+          ]
+        ]
+      ]
+    ]
+  ]
+]

@@ -1,0 +1,44 @@
+body {
+    font-family: helvetica;
+}
+
+.title {
+    text-align: center;
+}
+
+.container {
+    padding-top: 50px;
+}
+
+.board {
+    width: 480px;
+    margin: auto;
+    background: gray;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.pad {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    background: black;
+    border-radius: 5px;
+    z-index: 3;
+}
+
+.pad:hover {
+    cursor: pointer;
+    background: white;
+}
+
+.column {
+    position: absolute;
+    width: 60px;
+    background: #eeeeee;
+    z-index: 2;
+}
