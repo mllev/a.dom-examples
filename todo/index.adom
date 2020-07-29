@@ -1,42 +1,49 @@
-var name = 'Mark'
-var item = ''
-
 --
-function addItem () {
-  fetch('/item', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ item: item })
-  });
+class TodoList {
+  addItem () {
+    if (!this.item) return;
+    this.items.push({ text: this.item, completed: false });
+    this.item = '';
+  }
 
-  items.push(item);
-  item = '';
-}
+  markComplete (id) {
+    this.items[id].completed = !this.items[id].completed;
+    this.completed = this.items.filter(i => i.completed).length;
+  }
 
-function deleteItem (e) {
-  var i = parseInt(e.target.dataset.idx)
-  fetch('/item/' + i, { method: 'DELETE' });
-  items.splice(i, 1);
+  archive () {
+    this.items = this.items.filter(i => !i.completed);
+    this.completed = 0;
+  }
 }
 --
 
-doctype html5
+tag TodoList [
+  let item = ''
+  let items = []
+  let completed = 0
+
+  div [
+    input value={item} on:input="item = $e.target.value" []
+    button on:click="this.addItem()" "add"
+    button on:click="this.archive()" "archive ({{ completed }})"
+    ul [
+      each (item, i in items) [
+        li
+          on:click="this.markComplete(i)"
+          style={item.completed ? "text-decoration:line-through;" : ""}
+          "{{item.text}}" 
+      ]
+    ]
+  ]
+]
 
 html [
   head []
-  body root [
-    div [
-      h1 "Welcome {{ name }}"
-    ]
-    input placeholder='Name' on:input='name = $e.target.value; $sync()';
-    div [
-      input value={item} on:input='item = $e.target.value';
-      button on:click={addItem} "add item"
-      ul [
-        each (item, i in items) [
-          li data-idx={i} on:click={deleteItem} '{{ item }}'
-        ]
-      ]
+  body [
+    div root [
+      h1 "Todo List"
+      TodoList []
     ]
   ]
 ]
