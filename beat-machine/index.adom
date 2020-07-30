@@ -1,13 +1,40 @@
 let styles = file 'styles.css'
 
-let rows = [[repeat 0 8]]
+let rows = [{
+  instrument: 'snare_01',
+  pads: [repeat 0 8]
+}]
+let instruments = {}
 let column = 0
 
 --
+const AudioContext = window.AudioContext || window.webkitAudioContext
+const audioCtx = new AudioContext()
+
 setInterval(() => {
   column = (column+1)%8;
   $sync();
 }, 500)
+
+async function getAudioFile (path) {
+  let data = await fetch(path);
+  let buf = await data.arrayBuffer();
+  let audio = await audioCtx.decodeAudioData(buf);
+  return audio;
+}
+
+async function init () {
+  for (i = 1; i <= 10; i++) {
+    let num = i < 10 ? `0${i}` : '10';
+    instruments[`hat_${num}`] = await getAudioFile(`instruments/hat_${num}.wav`);
+    instruments[`snare_${num}`] = await getAudioFile(`instruments/snare_${num}.wav`);
+    instruments[`kick_${num}`] = await getAudioFile(`instruments/kick_${num}.wav`);
+  }
+  console.log(instruments)
+}
+
+init();
+
 --
 
 html [
@@ -20,8 +47,18 @@ html [
       div.board [
         div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
         each (row in rows) [
-          each (pad in row) [
-            div.pad []
+          div.row [
+            each (pad, i in row.pads) [
+              div
+                class={['pad', row.pads[i] ? "active" : ""]}
+                on:click='row.pads[i] = !row.pads[i];' []
+            ]
+            select.instrument
+              on:change='row.instrument = $e.target.value;' [
+              each (name in instruments) [
+                option selected={row.instrument == name ? true : false} "{{name}}"
+              ]
+            ]
           ]
         ]
       ]
