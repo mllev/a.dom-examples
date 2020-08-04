@@ -6,17 +6,18 @@ let rows = [{
 }]
 let instruments = {}
 let column = 0
+let bpm = 100
 
 --
 const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioCtx = new AudioContext()
-let interval = undefined
+let timeout = undefined
 
 function play () {
   if (audioCtx.state === 'suspended') {
     audioCtx.resume();
   }
-  interval = setInterval(() => {
+  let update = () => {
     column = (column+1)%8;
     rows.forEach(row => {
       if (row.pads[column] === true) {
@@ -24,11 +25,21 @@ function play () {
       }
     })
     $sync();
-  }, 500)
+    timeout = setTimeout(update, 300);
+  }
+  update();
+}
+
+function encode () {
+
+}
+
+function decode (path) {
+
 }
 
 function pause () {
-  clearInterval(interval);
+  clearTimeout(timeout);
 }
 
 function addRow () {
@@ -82,21 +93,26 @@ init();
 // better fix: tbd
 let hide = false
 --
+/*
 setInterval(() => {
   hide = !hide
 }, 750)
+*/
 --
 
 html [
   head [
     style "{{styles}}"
+    link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' []
   ]
   body root [
     div.container [
       h3.title "Beat Machine"
-      //if (!hide) div class='' "test"
+      //if (!hide) div "test"
       div style='text-align:center;'[
-        button on:click="playPause()" "{{ is_playing ? 'pause' : 'play' }}"
+        button on:click="playPause()" [
+          i class={[is_playing ? 'fa fa-pause' : 'fa fa-play']} []
+        ]
       ]
       div.board [
         div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
@@ -105,10 +121,10 @@ html [
             each (pad, i in row.pads) [
               div
                 class={['pad', row.pads[i] ? "active" : ""]}
-                on:click='row.pads[i] = !row.pads[i];' []
+                on:click='row.pads[i] = !row.pads[i]' []
             ]
             select.instrument
-              on:change='row.instrument = $e.target.value;' [
+              on:change='row.instrument = $e.target.value' [
               each (name in instruments) [
                 option selected={row.instrument == name ? true : false} "{{name}}"
               ]
