@@ -1,8 +1,8 @@
 let styles = file 'styles.css'
-
+let is_playing = false
 let rows = [{
   instrument: 'snare_01',
-  pads: [repeat 0 8]
+  pads: [repeat false 8]
 }]
 let instruments = {}
 let column = 0
@@ -10,11 +10,40 @@ let column = 0
 --
 const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioCtx = new AudioContext()
+let interval = undefined
 
-setInterval(() => {
-  column = (column+1)%8;
-  $sync();
-}, 500)
+function play () {
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  interval = setInterval(() => {
+    column = (column+1)%8;
+    rows.forEach(row => {
+      if (row.pads[column] === true) {
+        playSound(instruments[row.instrument])
+      }
+    })
+    $sync();
+  }, 500)
+}
+
+function pause () {
+  clearInterval(interval);
+}
+
+function addRow () {
+  rows.push({
+    instrument: 'snare_01',
+    pads: [0, 0, 0, 0, 0, 0, 0, 0]
+  })
+}
+
+function playSound (buf) {
+  let source = audioCtx.createBufferSource();
+  source.buffer = buf;
+  source.connect(audioCtx.destination);
+  source.start();
+}
 
 async function getAudioFile (path) {
   let data = await fetch(path);
@@ -30,11 +59,32 @@ async function init () {
     instruments[`snare_${num}`] = await getAudioFile(`instruments/snare_${num}.wav`);
     instruments[`kick_${num}`] = await getAudioFile(`instruments/kick_${num}.wav`);
   }
-  console.log(instruments)
+}
+
+function playPause () {
+  if (is_playing) {
+    pause();
+    is_playing = false;
+    column = 0;
+  } else {
+    play();
+    is_playing = true;
+  }
 }
 
 init();
+--
 
+// adom bug: if a hidden element with the same tagname as an adjacent element is suddenly
+// not hidden, it will adopt the previous properties
+// see following example
+// quick fix: make sure the class property is set to empty if it is not present
+// better fix: tbd
+let hide = false
+--
+setInterval(() => {
+  hide = !hide
+}, 750)
 --
 
 html [
@@ -44,6 +94,10 @@ html [
   body root [
     div.container [
       h3.title "Beat Machine"
+      //if (!hide) div class='' "test"
+      div style='text-align:center;'[
+        button on:click="playPause()" "{{ is_playing ? 'pause' : 'play' }}"
+      ]
       div.board [
         div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
         each (row in rows) [
@@ -61,6 +115,9 @@ html [
             ]
           ]
         ]
+      ]
+      div style='text-align:center;' [
+        button on:click="addRow()" "add row"
       ]
     ]
   ]
