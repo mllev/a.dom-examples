@@ -1,8 +1,13 @@
-let styles = file 'styles.css'
 let is_playing = false
 let rows = [{
+  instrument: 'hat_10',
+  pads: [repeat 1 8]
+}, {
+  instrument: 'kick_01',
+  pads: [1, 0, 0, 0, 0, 1, 0, 0]
+}, {
   instrument: 'snare_01',
-  pads: [repeat false 8]
+  pads: [0, 0, 1, 0, 0, 0, 1, 0]
 }]
 let instruments = {}
 let column = 0
@@ -20,7 +25,7 @@ function play () {
   let update = () => {
     column = (column+1)%8;
     rows.forEach(row => {
-      if (row.pads[column] === true) {
+      if (row.pads[column] === 1) {
         playSound(instruments[row.instrument])
       }
     })
@@ -28,14 +33,6 @@ function play () {
     timeout = setTimeout(update, 300);
   }
   update();
-}
-
-function encode () {
-
-}
-
-function decode (path) {
-
 }
 
 function pause () {
@@ -70,6 +67,7 @@ async function init () {
     instruments[`snare_${num}`] = await getAudioFile(`instruments/snare_${num}.wav`);
     instruments[`kick_${num}`] = await getAudioFile(`instruments/kick_${num}.wav`);
   }
+  $sync();
 }
 
 function playPause () {
@@ -83,58 +81,42 @@ function playPause () {
   }
 }
 
-init();
+init()
 --
 
 // adom bug: if a hidden element with the same tagname as an adjacent element is suddenly
 // not hidden, it will adopt the previous properties
-// see following example
 // quick fix: make sure the class property is set to empty if it is not present
 // better fix: tbd
-let hide = false
---
-/*
-setInterval(() => {
-  hide = !hide
-}, 750)
-*/
---
+// make sure root keyword cannot be in a tag (do in parser)
+// adom bug: imports are relative to the root, and not the current file
 
-html [
-  head [
-    style "{{styles}}"
-    link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' []
-  ]
-  body root [
-    div.container [
-      h3.title "Beat Machine"
-      //if (!hide) div "test"
-      div style='text-align:center;'[
-        button on:click="playPause()" [
-          i class={[is_playing ? 'fa fa-pause' : 'fa fa-play']} []
+import 'components/page.adom'
+import 'components/slider.adom'
+import 'components/instruments.adom'
+import 'components/pad.adom'
+
+Page [
+  div.container root [
+    h3.title "Beat Machine"
+    //if (!hide) div "test"
+    div style='text-align:center;'[
+      button on:click="playPause()" [
+        i class={[is_playing ? 'fa fa-pause' : 'fa fa-play']} []
+      ]
+    ]
+    Slider[]
+    div.board [
+      div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
+      each (row in rows) [
+        div.row [
+          each (_, i in row.pads) Pad row={row} i={i} []
+          Instruments row={row} []
         ]
       ]
-      div.board [
-        div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
-        each (row in rows) [
-          div.row [
-            each (pad, i in row.pads) [
-              div
-                class={['pad', row.pads[i] ? "active" : ""]}
-                on:click='row.pads[i] = !row.pads[i]' []
-            ]
-            select.instrument
-              on:change='row.instrument = $e.target.value' [
-              each (name in instruments) [
-                option selected={row.instrument == name ? true : false} "{{name}}"
-              ]
-            ]
-          ]
-        ]
-      ]
-      div style='text-align:center;' [
-        button on:click="addRow()" "add row"
-      ]
+    ]
+    div style='text-align:center;' [
+      button on:click="addRow()" "add row"
     ]
   ]
 ]

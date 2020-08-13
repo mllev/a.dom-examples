@@ -1,0 +1,8 @@
+export tag Instruments [
+  select.instrument
+    on:change='props.row.instrument = $e.target.value' [
+    each (name in instruments) [
+      option selected={props.row.instrument == name ? true : false} "{{name}}"
+    ]
+  ]
+]
