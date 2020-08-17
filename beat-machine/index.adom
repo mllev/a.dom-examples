@@ -12,7 +12,7 @@ let rows = [{
 let instruments = {}
 let column = 0
 let bpm = 100
-
+let tempo = 0
 --
 const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioCtx = new AudioContext()
@@ -90,11 +90,20 @@ init()
 // better fix: tbd
 // make sure root keyword cannot be in a tag (do in parser)
 // adom bug: imports are relative to the root, and not the current file
+// adom note: state variables are global to the program (maybe change this?)
+// adom bug: if an undefined variable is used inside of an each statement that uses 'props', it wont be caught
+// adom issue: add ability to attach user defined events to tags
 
 import 'components/page.adom'
 import 'components/slider.adom'
 import 'components/instruments.adom'
 import 'components/pad.adom'
+
+// hack until event system for tags
+// in the future it will be: Slider on:update='updateTempo($e)' []
+let sliders = {
+  tempo: 0
+}
 
 Page [
   div.container root [
@@ -105,13 +114,14 @@ Page [
         i class={[is_playing ? 'fa fa-pause' : 'fa fa-play']} []
       ]
     ]
-    Slider[]
+    Slider width='200' label='tempo' []
+    span "tempo: {{sliders.tempo}}"
     div.board [
-      div.column style="top:0;bottom:0;left:{{5 + column * 60}};" []
+      div.column style="left:{{5 + column * 60}};" []
       each (row in rows) [
         div.row [
           each (_, i in row.pads) Pad row={row} i={i} []
-          Instruments row={row} []
+          Instruments instruments={instruments} row={row} []
         ]
       ]
     ]

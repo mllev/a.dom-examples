@@ -1,5 +1,27 @@
 --
 class Slider {
+  click(e) {
+    this.clicked = true;
+    this.clickStart = e.clientX + document.body.scrollLeft;
+  }
+
+  drag = e => {
+    if (this.clicked) {
+      let curr = e.clientX + document.body.scrollLeft;
+      let pos = this.starting + (curr - this.clickStart);
+      let w = this.width - 10;
+      this.pos = pos < 0 ? 0 : pos > w ? w : pos;
+      sliders[this.label] = parseInt(this.pos/190*100);
+      $sync();
+    }
+  }
+
+  mouseup = () => {
+    this.clicked = false;
+    this.starting = this.pos;
+    $sync();
+  }
+
   mount() {
     document.addEventListener('mouseup', this.mouseup)
     document.addEventListener('mousemove', this.drag)
@@ -9,25 +31,6 @@ class Slider {
     document.removeEventListener('mouseup', this.mouseup)
     document.removeEventListener('mousemove', this.drag)
   }
-
-  click(e) {
-    this.clicked = true;
-    this.clickStart = e.clientX + document.body.scrollLeft;
-  }
-
-  drag = (e) => {
-    if (this.clicked) {
-      let curr = e.clientX + document.body.scrollLeft;
-      let pos = curr - this.clickStart;
-      this.pos = pos < 0 ? 0 : pos > 190 ? 190 : pos;
-      $sync();
-    }
-  }
-
-  mouseup = () => {
-    this.clicked = false;
-    $sync();
-  }
 }
 --
 
@@ -35,10 +38,13 @@ export tag Slider [
   let pos = 0
   let clicked = false
   let clickStart = 0
+  let starting = 0
+  let width = props.width
+  let label = props.label
 
-  div.slider [
+  div.slider style='width:{{width}}px'[
     div.slider-bar
-      style='left:{{pos}}px;'
+      style='transform:translateX({{pos}}px);'
       on:mousedown='this.click($e)' []
   ]
 ]

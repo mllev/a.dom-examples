@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "adom --dev -r /=giphy.adom"
+    "dev": "adom --dev -r /=giphy.adom",
+    "local": "node ../../a.dom/cli.js --dev -r /=giphy.adom"
   },
   "author": "",
   "license": "ISC"
