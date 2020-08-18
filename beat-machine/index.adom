@@ -9,10 +9,12 @@ let rows = [{
   instrument: 'snare_01',
   pads: [0, 0, 1, 0, 0, 0, 1, 0]
 }]
+
 let instruments = {}
 let column = 0
 let bpm = 100
 let tempo = 0
+
 --
 const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioCtx = new AudioContext()
@@ -88,11 +90,11 @@ init()
 // not hidden, it will adopt the previous properties
 // quick fix: make sure the class property is set to empty if it is not present
 // better fix: tbd
-// make sure root keyword cannot be in a tag (do in parser)
-// adom bug: imports are relative to the root, and not the current file
-// adom note: state variables are global to the program (maybe change this?)
-// adom bug: if an undefined variable is used inside of an each statement that uses 'props', it wont be caught
+// adom issue: make sure root keyword cannot be in a tag (do in parser)
 // adom issue: add ability to attach user defined events to tags
+// adom bug: imports are relative to the root, and not the current file
+// adom bug: if an undefined variable is used inside of an each statement that uses 'props', it wont be caught
+// adom note: state variables are global to the program (maybe change this?)
 
 import 'components/page.adom'
 import 'components/slider.adom'

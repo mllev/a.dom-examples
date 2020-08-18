@@ -11,6 +11,7 @@ class Slider {
       let pos = this.starting + (curr - this.clickStart);
       let w = this.width - 10;
       this.pos = pos < 0 ? 0 : pos > w ? w : pos;
+      // temporary hack until we can emit events
       sliders[this.label] = parseInt(this.pos/190*100);
       $sync();
     }
@@ -42,7 +43,7 @@ export tag Slider [
   let width = props.width
   let label = props.label
 
-  div.slider style='width:{{width}}px'[
+  div.slider style='width:{{width}}px' [
     div.slider-bar
       style='transform:translateX({{pos}}px);'
       on:mousedown='this.click($e)' []
