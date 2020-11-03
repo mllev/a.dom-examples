@@ -3,23 +3,31 @@ class Slider {
   constructor() {
     this.clicked = false
     this.clickStart = 0
-    this.starting = 0
   }
 
   click(e) {
     this.clicked = true;
     this.clickStart = e.clientX + document.body.scrollLeft;
+    e.stopPropagation();
   }
 
-  drag = e => {
+  drag = (e) => {
     if (this.clicked) {
       let curr = e.clientX + document.body.scrollLeft;
       let pos = this.starting + (curr - this.clickStart);
       let w = this.width - 10;
       this.pos = pos < 0 ? 0 : pos > w ? w : pos;
-      this.emit('slide', parseInt(this.pos/(this.width-10)*(this.max)));
+      this.emit('slide', parseInt(this.pos / w * this.max));
       $sync();
     }
+  }
+
+  clickMove(e) {
+    let curr = e.clientX + document.body.scrollLeft;
+    let pos = this.starting + (curr - this.starting) - 10;
+    let w = this.width - 10;
+    this.starting = this.pos = pos < 0 ? 0 : pos > w ? w : pos;
+    this.emit('slide', parseInt(this.pos / w * this.max));
   }
 
   mouseup = () => {
@@ -41,11 +49,12 @@ class Slider {
 --
 
 export tag Slider [
-  let pos = 0
   let width = props.width
   let max = props.max
+  let pos = width * props.initial / max - 10
+  let starting = pos
 
-  div.slider style='width:{{width}}px' [
+  div.slider on:click='this.clickMove($e)' style='width:{{width}}px' [
     div.slider-bar
       style='transform:translateX({{pos}}px);'
       on:mousedown='this.click($e)'

@@ -12,7 +12,7 @@ let rows = [{
 
 let instruments = {}
 let column = 0
-let bpm = 0
+let bpm = 100
 let tempo = 0.5
 
 --
@@ -32,7 +32,9 @@ function play () {
       }
     })
     $sync();
-    timeout = setTimeout(update, 60000 / bpm * tempo);
+    if (bpm > 0) {
+      timeout = setTimeout(update, 60000 / bpm * tempo);
+    }
   }
   update();
 }
@@ -62,7 +64,7 @@ async function getAudioFile (path) {
   return audio;
 }
 
-async function init () {
+async function loadInstruments () {
   for (i = 1; i <= 10; i++) {
     let num = i < 10 ? `0${i}` : '10';
     instruments[`hat_${num}`] = await getAudioFile(`instruments/hat_${num}.wav`);
@@ -83,7 +85,7 @@ function playPause () {
   }
 }
 
-init()
+loadInstruments()
 --
 
 import 'components/page.adom'
@@ -110,19 +112,19 @@ Page [
     ]
     div [
       label "BPM"
-      Slider width='200' max={200} on:slide="bpm = $e"[]
+      Slider initial={bpm} width='200' max={200} on:slide="bpm = $e" []
       span "{{bpm}}"
     ]
     div [
       label "Tempo"
       select on:change='tempo = parseFloat($e.target.value)' [
-        each (o in tempos) [
-          option selected={o.value == tempo ? true : false} value={o.value} "{{o.display}}"
+        each (t in tempos) [
+          option selected={t.value == tempo ? true : false} value={t.value} "{{t.display}}"
         ]
       ]
     ]
     div.board [
-      div.column style="left:{{5 + column * 60}};" []
+      div.column style="left:{{5 + column * 60}}px;" []
       each (row in rows) [
         div.row [
           each (_, i in row.pads) Pad row={row} i={i} []

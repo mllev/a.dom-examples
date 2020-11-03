@@ -10,7 +10,5 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "adom-js": "^0.17.6"
-  }
+  "dependencies": {}
 }
