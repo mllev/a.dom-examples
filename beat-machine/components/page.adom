@@ -1,4 +1,4 @@
-let styles = file 'styles.css'
+let styles = file '../styles.css'
 
 export tag Page [
   head [

@@ -32,7 +32,7 @@ tag TodoList [
         li
           on:click="this.markComplete(i)"
           style={item.completed ? "text-decoration:line-through;" : ""}
-          "{{item.text}}" 
+            "{{item.text}}" 
       ]
     ]
   ]

@@ -9,5 +9,8 @@
     "local": "node ../../a.dom/cli.js --dev -r /=index.adom"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "adom-js": "^0.17.6"
+  }
 }

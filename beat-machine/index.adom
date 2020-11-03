@@ -12,8 +12,8 @@ let rows = [{
 
 let instruments = {}
 let column = 0
-let bpm = 100
-let tempo = 0
+let bpm = 0
+let tempo = 0.5
 
 --
 const AudioContext = window.AudioContext || window.webkitAudioContext
@@ -32,7 +32,7 @@ function play () {
       }
     })
     $sync();
-    timeout = setTimeout(update, 300);
+    timeout = setTimeout(update, 60000 / bpm * tempo);
   }
   update();
 }
@@ -86,38 +86,41 @@ function playPause () {
 init()
 --
 
-// adom bug: if a hidden element with the same tagname as an adjacent element is suddenly
-// not hidden, it will adopt the previous properties
-// quick fix: make sure the class property is set to empty if it is not present
-// better fix: tbd
-// adom issue: make sure root keyword cannot be in a tag (do in parser)
-// adom issue: add ability to attach user defined events to tags
-// adom bug: imports are relative to the root, and not the current file
-// adom bug: if an undefined variable is used inside of an each statement that uses 'props', it wont be caught
-// adom note: state variables are global to the program (maybe change this?)
-
 import 'components/page.adom'
 import 'components/slider.adom'
 import 'components/instruments.adom'
 import 'components/pad.adom'
 
-// hack until event system for tags
-// in the future it will be: Slider on:update='updateTempo($e)' []
-let sliders = {
-  tempo: 0
-}
+let tempos = [
+  { display: '1', value: 1 },
+  { display: '1/2', value: 0.5 },
+  { display: '1/4', value: 0.25 },
+  { display: '1/8', value: 0.125 },
+  { display: '1/16', value: 0.0625 },
+  { display: '1/32', value: 0.03125 }
+]
 
 Page [
   div.container root [
     h3.title "Beat Machine"
-    //if (!hide) div "test"
-    div style='text-align:center;'[
+    div style='text-align:center;' [
       button on:click="playPause()" [
-        i class={[is_playing ? 'fa fa-pause' : 'fa fa-play']} []
+        i class={is_playing ? 'fa fa-pause' : 'fa fa-play'} []
       ]
     ]
-    Slider width='200' label='tempo' []
-    span "tempo: {{sliders.tempo}}"
+    div [
+      label "BPM"
+      Slider width='200' max={200} on:slide="bpm = $e"[]
+      span "{{bpm}}"
+    ]
+    div [
+      label "Tempo"
+      select on:change='tempo = parseFloat($e.target.value)' [
+        each (o in tempos) [
+          option selected={o.value == tempo ? true : false} value={o.value} "{{o.display}}"
+        ]
+      ]
+    ]
     div.board [
       div.column style="left:{{5 + column * 60}};" []
       each (row in rows) [

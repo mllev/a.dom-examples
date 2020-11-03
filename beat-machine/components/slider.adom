@@ -1,5 +1,11 @@
 --
 class Slider {
+  constructor() {
+    this.clicked = false
+    this.clickStart = 0
+    this.starting = 0
+  }
+
   click(e) {
     this.clicked = true;
     this.clickStart = e.clientX + document.body.scrollLeft;
@@ -11,8 +17,7 @@ class Slider {
       let pos = this.starting + (curr - this.clickStart);
       let w = this.width - 10;
       this.pos = pos < 0 ? 0 : pos > w ? w : pos;
-      // temporary hack until we can emit events
-      sliders[this.label] = parseInt(this.pos/190*100);
+      this.emit('slide', parseInt(this.pos/(this.width-10)*(this.max)));
       $sync();
     }
   }
@@ -37,15 +42,13 @@ class Slider {
 
 export tag Slider [
   let pos = 0
-  let clicked = false
-  let clickStart = 0
-  let starting = 0
   let width = props.width
-  let label = props.label
+  let max = props.max
 
   div.slider style='width:{{width}}px' [
     div.slider-bar
       style='transform:translateX({{pos}}px);'
-      on:mousedown='this.click($e)' []
+      on:mousedown='this.click($e)'
+      []
   ]
 ]

@@ -1,28 +1,3 @@
-let styles = """
-.board {
-  display: flex;
-  flex-wrap: wrap;
-  width: 500px;
-  margin: 50px auto;
-}
-
-.cell {
-  box-sizing: border-box;
-  width: 50px;
-  height: 50px;
-  border: 1px solid black;
-  background: white;
-}
-
-.cell-right { border-right-color: #e9e9e9; }
-.cell-left { border-left-color: #e9e9e9; }
-.cell-top { border-top-color: #e9e9e9; }
-.cell-bottom { border-bottom-color: #e9e9e9; }
-
-.cell-visited { background: #e9e9e9; }
-.cell-current { background: red; }
-"""
-
 let grid = [ repeat [ repeat 0 5 ] 100 ]
 let current = 0
 
@@ -110,8 +85,8 @@ async function generateMaze () {
 --
 
 html [
-  head[
-    style "{{ styles }}"
+  head [
+    link rel='stylesheet' href='styles.css' []
   ]
   body root [
     div style="text-align:center;" [
@@ -119,14 +94,14 @@ html [
     ]
     div.board [
       each (cell, i in grid) [
-	div.cell class={[
-	  cell[0] == 1 ? 'cell-top' : '',
-	  cell[1] == 1 ? 'cell-right' : '',
-	  cell[2] == 1 ? 'cell-bottom' : '',
-	  cell[3] == 1 ? 'cell-left' : '',
-	  cell[4] == 1 ? 'cell-visited' : '',
-	  i == current ? 'cell-current' : ''
-	]} []
+        div.cell class={[
+          cell[0] == 1 ? 'cell-top' : '',
+          cell[1] == 1 ? 'cell-right' : '',
+          cell[2] == 1 ? 'cell-bottom' : '',
+          cell[3] == 1 ? 'cell-left' : '',
+          cell[4] == 1 ? 'cell-visited' : '',
+          i == current ? 'cell-current' : ''
+        ]} []
       ]
     ]
   ]
