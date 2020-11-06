@@ -1,19 +1,30 @@
 body {
   font-family: helvetica;
+  background-color: #16181C;
 }
 
 .title {
   text-align: center;
+  color: white;
 }
 
 .container {
   padding-top: 50px;
 }
 
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  margin: 15px 0 10px 10px;
+}
+
 .board {
-  width: 480px;
+  max-width: 800px;
+  width: 100%;
   margin: auto;
-  background: gray;
+  background: rgba(128, 128, 128, 0);
   padding: 5px;
   border-radius: 5px;
   position: relative;
@@ -21,25 +32,43 @@ body {
 }
 
 .row {
+  display: flex;
+}
+
+.pads {
+  display: flex;
+  flex-wrap: nowrap;
   width: 100%;
+  justify-content: space-around;
   position: relative;
 }
 
-.instrument {
-  position: absolute;
+select {
+  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.5);
+  margin: 10px;
+  padding: 10px;
+  background-color: #16181C;
+  border: 1px solid rgb(19, 197, 114);
+  color: white;
+  outline: none;
+  cursor: pointer;
 }
 
 .pad {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  margin: 5px;
-  background: black;
-  border-radius: 5px;
+  width: 100%;
+  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.5);
+  border: 1px solid transparent;
+  margin: 10px;
+  background: #16181C;
+  /* border-radius: 5px; */
 }
 
 .active {
-  background: white;
+  border-color: rgb(0, 140, 255);
+}
+
+.playing {
+  background-color: #272a30;
 }
 
 .pad:hover {
@@ -55,8 +84,9 @@ body {
 }
 
 .slider {
+  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.5);
   height: 20px;
-  background: gray;
+  background: #272a30;
   position: relative;
   overflow: visible;
 }
@@ -64,11 +94,20 @@ body {
 .slider-bar {
   position: absolute;
   height: 20px;
-  background: black;
+  background:rgb(0, 140, 255);
   width: 10px;
   left: 0px;
 }
 
 .slider-bar:hover {
   cursor: pointer;
+}
+
+button {
+  padding: 10px;
+  border: 1px solid rgb(0, 140, 255);
+  background-color: transparent;
+  color:  rgb(255, 255, 255);
+  cursor: pointer;
+  outline: none;
 }

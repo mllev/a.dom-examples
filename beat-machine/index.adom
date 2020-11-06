@@ -110,32 +110,38 @@ Page [
         i class={is_playing ? 'fa fa-pause' : 'fa fa-play'} []
       ]
     ]
-    div [
-      label "BPM"
-      Slider initial={bpm} width='200' max={200} on:slide="bpm = $e" []
-      span "{{bpm}}"
-    ]
-    div [
-      label "Tempo"
-      select on:change='tempo = parseFloat($e.target.value)' [
-        each (t in tempos) [
-          option selected={t.value == tempo ? true : false} value={t.value} "{{t.display}}"
+
+    div.board [
+      div.controls [
+        div [
+          label "BPM"
+          Slider initial={bpm} width='200' max={200} on:slide="bpm = $e" []
+          span "{{bpm}}"
+        ]
+        div [
+          label "Tempo"
+          select on:change='tempo = parseFloat($e.target.value)' [
+            each (t in tempos) [
+              option selected={t.value == tempo ? true : false} value={t.value} "{{t.display}}"
+            ]
+          ]
         ]
       ]
-    ]
-    div.board [
-      div.column style="left:{{5 + column * 60}}px;" []
+      // div.column style="left:{{5 + column * 60}}px;" []
       each (row in rows) [
         div.row [
-          each (pad, i in row.pads)
-            Pad
-              on:tap='row.pads[$e] = 1 - row.pads[$e]'
-              index={i}
-              active={pad} []
           Instruments
             on:select='row.instrument = $e'
             instruments={instruments}
             selected={row.instrument} []
+          div.pads [
+            each (pad, i in row.pads)
+              Pad
+                playing={i == column}
+                on:tap='row.pads[$e] = 1 - row.pads[$e]'
+                index={i}
+                active={pad} []
+          ]
         ]
       ]
     ]
