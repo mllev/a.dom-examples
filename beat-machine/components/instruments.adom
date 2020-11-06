@@ -1,7 +1,7 @@
 export tag Instruments [
-  select.instrument on:change='props.row.instrument = $e.target.value' [
+  select.instrument on:change='this.emit("select", $e.target.value)' [
     each (i in props.instruments) [
-      option selected={props.row.instrument == i ? true : false} "{{i}}"
+      option selected={props.selected == i ? true : false} "{{i}}"
     ]
   ]
 ]

@@ -1,7 +1,5 @@
-import 'instruments.adom'
-
 export tag Pad [
   div
-    class={['pad', props.row.pads[props.i] ? "active" : ""]}
-    on:click='props.row.pads[props.i] = 1 - props.row.pads[props.i]' []
+    class={['pad', props.active ? "active" : ""]}
+    on:click='this.emit("tap", props.index)' []
 ]

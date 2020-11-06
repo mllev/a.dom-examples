@@ -127,8 +127,15 @@ Page [
       div.column style="left:{{5 + column * 60}}px;" []
       each (row in rows) [
         div.row [
-          each (_, i in row.pads) Pad row={row} i={i} []
-          Instruments instruments={instruments} row={row} []
+          each (pad, i in row.pads)
+            Pad
+              on:tap='row.pads[$e] = 1 - row.pads[$e]'
+              index={i}
+              active={pad} []
+          Instruments
+            on:select='row.instrument = $e'
+            instruments={instruments}
+            selected={row.instrument} []
         ]
       ]
     ]
