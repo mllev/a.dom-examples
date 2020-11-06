@@ -110,7 +110,6 @@ Page [
         i class={is_playing ? 'fa fa-pause' : 'fa fa-play'} []
       ]
     ]
-
     div.board [
       div.controls [
         div [

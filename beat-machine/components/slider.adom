@@ -23,7 +23,7 @@ class Slider {
   }
 
   clickMove(e) {
-    let curr = e.clientX + document.body.scrollLeft;
+    let curr = e.clientX + document.body.scrollLeft - e.target.getBoundingClientRect().left;
     let pos = this.starting + (curr - this.starting) - 10;
     let w = this.width - 10;
     this.starting = this.pos = pos < 0 ? 0 : pos > w ? w : pos;
