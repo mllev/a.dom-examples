@@ -11,7 +11,7 @@ class Slider {
     e.stopPropagation();
   }
 
-  drag = (e) => {
+  drag(e) {
     if (this.clicked) {
       let curr = e.clientX + document.body.scrollLeft;
       let pos = this.starting + (curr - this.clickStart);
@@ -30,20 +30,22 @@ class Slider {
     this.emit('slide', parseInt(this.pos / w * this.max));
   }
 
-  mouseup = () => {
-    this.clicked = false;
-    this.starting = this.pos;
-    $sync();
+  mouseup(e) {
+    if (this.clicked) {
+      this.clicked = false;
+      this.starting = this.pos;
+      $sync();
+    }
   }
 
   mount() {
-    document.addEventListener('mouseup', this.mouseup)
-    document.addEventListener('mousemove', this.drag)
+    document.addEventListener('mouseup', this.mouseup.bind(this))
+    document.addEventListener('mousemove', this.drag.bind(this))
   }
 
   unmount() {
-    document.removeEventListener('mouseup', this.mouseup)
-    document.removeEventListener('mousemove', this.drag)
+    document.removeEventListener('mouseup', this.mouseup.bind(this))
+    document.removeEventListener('mousemove', this.drag.bind(this))
   }
 }
 --
@@ -54,7 +56,7 @@ export tag Slider [
   let pos = width * props.initial / max - 10
   let starting = pos
 
-  div.slider on:click='this.clickMove($e)' style='width:{{width}}px' [
+  div.slider on:mousedown='this.clickMove($e)' style='width:{{width}}px' [
     div.slider-bar
       style='transform:translateX({{pos}}px);'
       on:mousedown='this.click($e)'

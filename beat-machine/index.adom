@@ -60,8 +60,9 @@ function playSound (buf) {
 async function getAudioFile (path) {
   let data = await fetch(path);
   let buf = await data.arrayBuffer();
-  let audio = await audioCtx.decodeAudioData(buf);
-  return audio;
+  return new Promise(function (resolve, reject) {
+    audioCtx.decodeAudioData(buf, resolve, reject);
+  });
 }
 
 async function loadInstruments () {
@@ -126,7 +127,6 @@ Page [
           ]
         ]
       ]
-      // div.column style="left:{{5 + column * 60}}px;" []
       each (row in rows) [
         div.row [
           Instruments
