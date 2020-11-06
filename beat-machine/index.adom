@@ -1,12 +1,16 @@
 let is_playing = false
 let rows = [{
-  instrument: 'hat_10',
+  type: 'hat',
+  style: 10,
   pads: [repeat 1 8]
 }, {
+  type: 'kick',
+  style: 1,
   instrument: 'kick_01',
   pads: [1, 0, 0, 0, 0, 1, 0, 0]
 }, {
-  instrument: 'snare_01',
+  type: 'snare',
+  style: 1,
   pads: [0, 0, 1, 0, 0, 0, 1, 0]
 }]
 
@@ -20,6 +24,11 @@ const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioCtx = new AudioContext()
 let timeout = undefined
 
+function instrumentName (row) {
+  let s = row.style;
+  return `${row.type}_${s < 10 ? '0' + s : s}`
+}
+
 function play () {
   if (audioCtx.state === 'suspended') {
     audioCtx.resume();
@@ -28,7 +37,7 @@ function play () {
     column = (column+1)%8;
     rows.forEach(row => {
       if (row.pads[column] === 1) {
-        playSound(instruments[row.instrument])
+        playSound(instruments[instrumentName(row)])
       }
     })
     $sync();
@@ -130,9 +139,10 @@ Page [
       each (row in rows) [
         div.row [
           Instruments
-            on:select='row.instrument = $e'
-            instruments={instruments}
-            selected={row.instrument} []
+            on:type='row.type = $e'
+            on:style='row.style = $e'
+            type={row.type}
+            style={row.style} []
           div.pads [
             each (pad, i in row.pads)
               Pad
