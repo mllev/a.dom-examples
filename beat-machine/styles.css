@@ -1,6 +1,7 @@
 body {
   font-family: helvetica;
   background-color: #16181C;
+  user-select: none;
 }
 
 .title {
