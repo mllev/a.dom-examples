@@ -1,7 +1,15 @@
 export tag Instruments [
-  select.instrument on:change='this.emit("select", $e.target.value)' [
-    each (i in props.instruments) [
-      option selected={props.selected == i ? true : false} "{{i}}"
+  let types = ['hat', 'kick', 'snare']
+  div.instruments [
+    select on:change='this.emit("style", $e.target.value)' [
+      each (i in [1, 2, 3, 4, 5, 6, 7, 8, 8, 10]) [
+        option selected={props.style == i ? true : false} "{{i}}"
+      ]
+    ]
+    select on:change='this.emit("type", $e.target.value)' [
+      each (i in types) [
+        option selected={props.type == i ? true : false} "{{i}}"
+      ]
     ]
   ]
 ]
