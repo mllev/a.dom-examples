@@ -1,36 +1,33 @@
---
-class TodoList {
-  addItem () {
-    if (!this.item) return;
-    this.items.push({ text: this.item, completed: false });
-    this.item = '';
-  }
-
-  markComplete (id) {
-    this.items[id].completed = !this.items[id].completed;
-    this.completed = this.items.filter(i => i.completed).length;
-  }
-
-  archive () {
-    this.items = this.items.filter(i => !i.completed);
-    this.completed = 0;
-  }
-}
---
-
 tag TodoList [
   let item = ''
   let items = []
   let completed = 0
+  ---
+  function addItem () {
+    if (!item) return;
+    items.push({ text: item, completed: false });
+    item = '';
+  }
+
+  function markComplete (id) {
+    items[id].completed = !items[id].completed;
+    completed = items.filter(i => i.completed).length;
+  }
+
+  function archive () {
+    items = items.filter(i => !i.completed);
+    completed = 0;
+  }
+  ---
 
   div [
-    input value={item} on:input="item = $e.target.value" []
-    button on:click="this.addItem()" "add"
-    button on:click="this.archive()" "archive ({{ completed }})"
+    input bind:value={item} []
+    button on:click="addItem()" "add"
+    button on:click="archive()" "archive ({{ completed }})"
     ul [
       each (item, i in items) [
         li
-          on:click="this.markComplete(i)"
+          on:click="markComplete(i)"
           style={item.completed ? "text-decoration:line-through;" : ""}
             "{{item.text}}" 
       ]

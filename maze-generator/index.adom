@@ -1,7 +1,7 @@
 let grid = [ repeat [ repeat 0 5 ] 100 ]
 let current = 0
 
---
+---
 function getUnvisitedNeighbors(pos) {
   let neighbors = [];
 
@@ -82,7 +82,7 @@ async function generateMaze () {
     }
   }
 }
---
+---
 
 html [
   head [

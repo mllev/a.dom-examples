@@ -1,11 +1,11 @@
-var gifs = []
-var loading = false
-var search = null
-var offset = 0
-var show_modal = false
-var gif_url = ''
+let gifs = []
+let loading = false
+let search = null
+let offset = 0
+let show_modal = false
+let gif_url = ''
 
---
+---
 
 const API_KEY = 'iumNWHtFimRyiaLUtcNMYicCnWoLaBJN'
 
@@ -52,9 +52,9 @@ window.addEventListener('scroll', function () {
   }
 })
 
-loadGIFs()
+loadGIFs('rick and morty')
 
---
+---
 
 var styles = file 'styles.css'
 
@@ -81,7 +81,9 @@ Page [
       ]
     ]
     h2 "giphy browser"
-    input.search on:keyup='if ($e.keyCode === 13) loadGIFs($e.target.value)' nosync placeholder='search for gifs' []
+    input.search on:keyup='if ($e.keyCode === 13) loadGIFs($e.target.value)'
+      // nosync
+      placeholder='search for gifs' []
     if (gifs.length == 0) p.message "no results"
     div.gif-container [
       each (gif in gifs) [

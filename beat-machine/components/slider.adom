@@ -1,65 +1,61 @@
---
-class Slider {
-  constructor() {
-    this.clicked = false
-    this.clickStart = 0
-  }
-
-  click(e) {
-    this.clicked = true;
-    this.clickStart = e.clientX + document.body.scrollLeft;
-    e.stopPropagation();
-  }
-
-  drag(e) {
-    if (this.clicked) {
-      let curr = e.clientX + document.body.scrollLeft;
-      let pos = this.starting + (curr - this.clickStart);
-      let w = this.width - 10;
-      this.pos = pos < 0 ? 0 : pos > w ? w : pos;
-      this.emit('slide', parseInt(this.pos / w * this.max));
-      $sync();
-    }
-  }
-
-  clickMove(e) {
-    let curr = e.clientX + document.body.scrollLeft - e.target.getBoundingClientRect().left;
-    let pos = this.starting + (curr - this.starting) - 10;
-    let w = this.width - 10;
-    this.starting = this.pos = pos < 0 ? 0 : pos > w ? w : pos;
-    this.emit('slide', parseInt(this.pos / w * this.max));
-  }
-
-  mouseup(e) {
-    if (this.clicked) {
-      this.clicked = false;
-      this.starting = this.pos;
-      $sync();
-    }
-  }
-
-  mount() {
-    document.addEventListener('mouseup', this.mouseup.bind(this))
-    document.addEventListener('mousemove', this.drag.bind(this))
-  }
-
-  unmount() {
-    document.removeEventListener('mouseup', this.mouseup.bind(this))
-    document.removeEventListener('mousemove', this.drag.bind(this))
-  }
-}
---
-
 export tag Slider [
   let width = props.width
   let max = props.max
   let pos = width * props.initial / max - 10
   let starting = pos
 
-  div.slider on:mousedown='this.clickMove($e)' style='width:{{width}}px' [
+  ---
+  let clickStart = 0
+  let clicked = false
+
+  function click(e) {
+    e.stopPropagation();
+    clicked = true;
+    clickStart = e.clientX + document.body.scrollLeft;
+  }
+
+  function drag(e) {
+    if (clicked) {
+      let curr = e.clientX + document.body.scrollLeft;
+      let p = starting + (curr - clickStart);
+      let w = width - 10;
+      pos = p < 0 ? 0 : p > w ? w : p;
+      $emit('slide', parseInt(pos / w * max));
+      $sync();
+    }
+  }
+
+  function clickMove(e) {
+    let curr = e.clientX + document.body.scrollLeft - e.target.getBoundingClientRect().left;
+    let p = starting + (curr - starting) - 10;
+    let w = width - 10;
+    starting = pos = p < 0 ? 0 : p > w ? w : p;
+    $emit('slide', parseInt(pos / w * max));
+  }
+
+  function mouseup(e) {
+    if (clicked) {
+      clicked = false;
+      starting = pos;
+      $sync();
+    }
+  }
+
+  $on('mount', function () {
+    document.addEventListener('mouseup', mouseup)
+    document.addEventListener('mousemove', drag)
+  });
+
+  $on('unmount', function() {
+    document.removeEventListener('mouseup', mouseup)
+    document.removeEventListener('mousemove', drag)
+  });
+  ---
+
+  div.slider on:mousedown='clickMove($e)' style='width:{{width}}px' [
     div.slider-bar
       style='transform:translateX({{pos}}px);'
-      on:mousedown='this.click($e)'
+      on:mousedown='click($e)'
       []
   ]
 ]

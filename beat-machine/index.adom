@@ -19,7 +19,7 @@ let column = 0
 let bpm = 100
 let tempo = 0.5
 
---
+---
 const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioCtx = new AudioContext()
 let timeout = undefined
@@ -96,7 +96,7 @@ function playPause () {
 }
 
 loadInstruments()
---
+---
 
 import 'components/page.adom'
 import 'components/slider.adom'
