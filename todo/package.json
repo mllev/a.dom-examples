@@ -5,13 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "adom --dev -r /=index.adom",
-    "local": "node ../../a.dom/cli.js --dev -r /=index.adom --minify"
+    "dev": "adom dev -r /=index.adom",
+    "local": "node ../../a.dom/cli.js dev -r /=index.adom"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "adom-js": "^0.15.5",
-    "express": "^4.17.1"
+    "adom-js": "^0.20.15"
   }
 }

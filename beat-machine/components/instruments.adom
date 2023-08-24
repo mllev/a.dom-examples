@@ -1,5 +1,6 @@
 export tag Instruments [
   let types = ['hat', 'kick', 'snare']
+
   div.instruments [
     select on:change='$emit("type", $e.target.value)' [
       each (i in types) [

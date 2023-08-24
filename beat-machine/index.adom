@@ -1,8 +1,8 @@
-let is_playing = false
-let rows = [{
+let is_playing false
+let rows [{
   type: 'hat',
   style: 10,
-  pads: [repeat 1 8]
+  pads: 1 | repeat 8
 }, {
   type: 'kick',
   style: 1,
@@ -113,7 +113,7 @@ let tempos = [
 ]
 
 Page [
-  div.container root [
+  div.container [
     h3.title "Beat Machine"
     div style='text-align:center;' [
       button on:click="playPause()" [
@@ -124,7 +124,7 @@ Page [
       div.controls [
         div [
           label "BPM"
-          Slider initial={bpm} width='200' max={200} on:slide="bpm = $e" []
+          Slider initial={bpm} width={200} max={200} on:slide="bpm = $e" []
           span "{{bpm}}"
         ]
         div [
@@ -144,12 +144,13 @@ Page [
             type={row.type}
             style={row.style} []
           div.pads [
-            each (pad, i in row.pads)
+            each (pad, i in row.pads) [
               Pad
                 playing={i == column}
                 on:tap='row.pads[$e] = 1 - row.pads[$e]'
                 index={i}
                 active={pad} []
+            ]
           ]
         ]
       ]

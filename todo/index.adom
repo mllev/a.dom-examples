@@ -2,6 +2,7 @@ tag TodoList [
   let item = ''
   let items = []
   let completed = 0
+
   ---
   function addItem () {
     if (!item) return;
@@ -20,19 +21,35 @@ tag TodoList [
   }
   ---
 
-  div [
-    input bind:value={item} []
-    button on:click="addItem()" "add"
-    button on:click="archive()" "archive ({{ completed }})"
-    ul [
-      each (item, i in items) [
-        li
-          on:click="markComplete(i)"
-          style={item.completed ? "text-decoration:line-through;" : ""}
-            "{{item.text}}" 
-      ]
+  input bind:value={item} []
+  button on:click="addItem()" "add"
+  button on:click="archive()" "archive ({{ completed }})"
+  ul [
+    each (item, i in items) [
+      li
+        on:click="markComplete(i)"
+        style={item.completed ? "text-decoration:line-through;" : ""}
+          "{{item.text}}" 
     ]
   ]
+]
+
+tag Box [
+  let idx = 0
+  let colors = ['red', 'blue']
+  let bg = colors[idx]
+  style ".{{props.id}} { background: {{bg}}; width: 100px; height: 100px; }"
+  div class={props.id} []
+  button on:click='idx=(idx+1)%2; bg=colors[idx]' 'change'
+]
+
+tag TodoMini [
+  let item ''
+  let items []
+  h2 'TODO LIST'
+  input bind:value={item} []
+  button on:click="items.push(item)" 'add'
+  ul [ each (i in items) li '{{ i }}' ]
 ]
 
 html [
@@ -41,6 +58,10 @@ html [
     div root [
       h1 "Todo List"
       TodoList []
+      Box id='b1' []
+      Box id='b2' []
+      Box id='b3' []
+      TodoMini []
     ]
   ]
 ]
